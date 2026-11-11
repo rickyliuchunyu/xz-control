@@ -5,8 +5,8 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import unittest
 from unittest.mock import patch
-from app import QApplication, Window
-from sensor import SensorPanel, SensorParser, TimingTracker, DisplayEnvelope
+from xz_control.app import QApplication, Window
+from xz_control.sensor import SensorPanel, SensorParser, TimingTracker, DisplayEnvelope
 
 class SensorTests(unittest.TestCase):
     @classmethod
@@ -17,7 +17,7 @@ class SensorTests(unittest.TestCase):
         samples=[]; p.sample_received.connect(lambda t,v,k,d:samples.append((v,d)))
         self.addCleanup(p.disconnect); self.addCleanup(p.timer.stop); self.addCleanup(p.display_timer.stop)
         p.feed(b'0,100,-20,300\n',10)
-        with patch('sensor.time.monotonic',return_value=10): p.start_calibration()
+        with patch('xz_control.sensor.time.monotonic',return_value=10): p.start_calibration()
         self.assertTrue(p.calibrating)
         for i in range(1,201):
             x=99 if i%2 else 101
@@ -28,7 +28,7 @@ class SensorTests(unittest.TestCase):
         self.assertEqual(samples[-1][1]['baseline_uT'],(100,-20,300))
         self.assertEqual(p.corrected((103,-18,295)),(3,2,-5))
         # Repeated calibration replaces the baseline using original input.
-        with patch('sensor.time.monotonic',return_value=12): p.start_calibration()
+        with patch('xz_control.sensor.time.monotonic',return_value=12): p.start_calibration()
         for i in range(1,201): p.feed(f'{2000000+i*10000},110,-10,310\n'.encode(),12+i*.01)
         self.assertEqual(p.offset,(110,-10,310)); self.assertEqual(p.calibration_id,2)
         self.assertEqual(p.plot.samples.snapshot()[-1]['last'],[0,0])
@@ -39,13 +39,13 @@ class SensorTests(unittest.TestCase):
         self.addCleanup(p.disconnect); self.addCleanup(p.timer.stop); self.addCleanup(p.display_timer.stop)
         p.offset=(10,20,30); p.calibration_id=1
         p.feed(b'0,11,21,31\n',10)
-        with patch('sensor.time.monotonic',return_value=10): p.start_calibration()
+        with patch('xz_control.sensor.time.monotonic',return_value=10): p.start_calibration()
         p.feed(b'10000,11,21,31\n',10.01)
         p.feed(b'20000,11,21,31\n',11)
         self.assertFalse(p.calibrating); self.assertEqual(p.offset,(10,20,30))
         self.assertIn('保留',p.calibration_status.text())
         p.calibration_allowed=lambda:False
-        with patch('sensor.time.monotonic',return_value=11): p.start_calibration()
+        with patch('xz_control.sensor.time.monotonic',return_value=11): p.start_calibration()
         self.assertFalse(p.calibrating)
 
     def test_calibration_disables_motion_and_experiment_start(self):
@@ -54,7 +54,7 @@ class SensorTests(unittest.TestCase):
         self.assertTrue(w.execute.isEnabled())
         p=w.sensor; p.ser=type('Port',(),{'close':lambda s:None})()
         p.feed(b'0,1,2,3\n',10)
-        with patch('sensor.time.monotonic',return_value=10): p.start_calibration()
+        with patch('xz_control.sensor.time.monotonic',return_value=10): p.start_calibration()
         self.assertTrue(p.calibrating); self.assertFalse(w.execute.isEnabled())
         self.assertFalse(w.exp_start.isEnabled()); self.assertTrue(w.stop.isEnabled())
         self.assertTrue(all(not b.isEnabled() for b in w.jog_buttons))
@@ -116,7 +116,7 @@ class SensorTests(unittest.TestCase):
         class Port:
             def close(self): pass
         p.ser=Port(); p.started=9
-        with patch('sensor.time.monotonic',return_value=13): p.render_status()
+        with patch('xz_control.sensor.time.monotonic',return_value=13): p.render_status()
         self.assertIn('过期',p.status.text()); self.assertIn('—',p.values.text())
         p.disconnect(); p.timer.stop(); p.display_timer.stop()
 
@@ -130,13 +130,13 @@ class SensorTests(unittest.TestCase):
             def write(self,data): raise AssertionError('sensor must never write')
         w=Window(); w.toggle_connection(); w.command('ZERO ALL'); w.command('ARM')
         w.sensor.ports.clear(); w.sensor.ports.addItem('C3','/dev/test-c3')
-        with patch('sensor.serial.Serial',Port):
+        with patch('xz_control.sensor.serial.Serial',Port):
             w.sensor.toggle(); w.sensor.poll()
             self.assertEqual(w.sensor.port,'/dev/test-c3')
             w.sensor.feed(b'Bx:1,By:2,Bz:3\n',10)
             w.sensor.disconnect(); self.assertTrue(w.link.ready); self.assertTrue(w.s['armed'])
         w.sensor.motor_port=lambda:'/dev/test-c3'
-        with patch('sensor.serial.Serial') as factory:
+        with patch('xz_control.sensor.serial.Serial') as factory:
             w.sensor.toggle(); factory.assert_not_called()
         w.close()
 
@@ -147,7 +147,7 @@ class SensorTests(unittest.TestCase):
             def close(self): pass
         w.sensor.ser=Port(); w.mode.setCurrentIndex(1)
         w.ports.clear(); w.ports.addItem('C3','/dev/test-c3')
-        with patch('app.QMessageBox.warning') as warning, patch.object(w.link,'connect_to') as connect:
+        with patch('xz_control.app.QMessageBox.warning') as warning, patch.object(w.link,'connect_to') as connect:
             w.toggle_connection(); warning.assert_called_once(); connect.assert_not_called()
         w.close()
 

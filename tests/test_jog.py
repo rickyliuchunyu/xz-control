@@ -3,8 +3,8 @@ from pathlib import Path
 from unittest.mock import patch
 os.environ.setdefault('QT_QPA_PLATFORM','offscreen')
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from app import QApplication,Window
-from protocol import Simulator
+from xz_control.app import QApplication,Window
+from xz_control.protocol import Simulator
 
 class JogTests(unittest.TestCase):
  def test_continuous_jog_beyond_10000(self):

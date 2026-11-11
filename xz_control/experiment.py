@@ -6,7 +6,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 from PySide6.QtCore import QObject, QTimer, Signal
-from protocol import move_command
+from .protocol import move_command
 
 MOTOR_FIELDS = ('x','z','tx','tz','vx','vz','armed','busy','phase','refx','refz','fault')
 MOTOR_COLUMNS = ('motor_x_pulses','motor_z_pulses','motor_target_x_pulses','motor_target_z_pulses',

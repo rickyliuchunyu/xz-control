@@ -1,3 +1,5 @@
+> 历史交付文档：保留原版本说明与代码片段；当前软件使用方式以 [用户指南](../user-guide.md) 为准。附件链接已更新为现有仓库路径。
+
 # ESP32-S3 + PFDE HBS57 XZ 双轴实验平台交付文档
 
 **版本：** v1.0  
@@ -212,11 +214,11 @@ OK ARM
 
 ## 11. 交付文件
 
-- [AccelStepper 单轴测试固件](HBS57_AccelStepper_1_64_0_single_axis.ino)
-- [AccelStepper 固件说明](HBS57_AccelStepper_1_64_0_说明.md)
-- [GPIO35 慢速测试固件](GPIO35_slow_blink_test.ino)
-- [ESP32-S3 + HBS57 构建方案](ESP32_S3_HBS57_实验平台构建方案.md)
-- [单轴测试步骤](HBS57_single_axis_test_测试步骤.md)
+- [AccelStepper 单轴测试固件](../../firmware/examples/HBS57_single_axis_test/HBS57_single_axis_test.ino)
+- [AccelStepper 固件说明](../hardware/accelstepper-notes.md)
+- [GPIO35 慢速测试固件](../../firmware/examples/GPIO35_slow_blink_test/GPIO35_slow_blink_test.ino)
+- [ESP32-S3 + HBS57 构建方案](../hardware/platform-setup.md)
+- [单轴测试步骤](../hardware/single-axis-test.md)
 
 ## 12. 参考资料
 

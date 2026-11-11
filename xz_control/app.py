@@ -14,9 +14,9 @@ from PySide6.QtGui import QColor, QPainter, QPen, QFont, QShortcut, QKeySequence
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
     QHBoxLayout, QGridLayout, QLabel, QPushButton, QComboBox, QSpinBox,
     QFrame, QPlainTextEdit, QMessageBox, QSizePolicy, QScrollArea, QDockWidget, QFileDialog, QTabWidget)
-from sensor import SensorPanel
-from experiment import Experiment
-from protocol import (Simulator, PROTOCOL, PROTOCOL_INT_MAX, PROTOCOL_INT_MIN, DEFAULT_ACCEL, ERRORS,
+from .sensor import SensorPanel
+from .experiment import Experiment
+from .protocol import (Simulator, PROTOCOL, PROTOCOL_INT_MAX, PROTOCOL_INT_MIN, DEFAULT_ACCEL, ERRORS,
                       move_command, parse_status, motion_profile)
 
 
@@ -351,7 +351,7 @@ class Window(QMainWindow):
             spin = QSpinBox(); spin.setRange(PROTOCOL_INT_MIN, PROTOCOL_INT_MAX); spin.setValue(100 if axis == 'x' else 10)
             er.addWidget(spin, row_index, 1); self.exp_targets[axis] = spin
         eb.addLayout(er)
-        self.exp_folder = Path(__file__).resolve().parent / 'experiment_data'
+        self.exp_folder = Path(__file__).resolve().parents[1] / 'data' / 'experiments'
         self.exp_path = label(str(self.exp_folder), 'muted'); self.exp_path.setWordWrap(True); self.exp_path.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred); eb.addWidget(self.exp_path)
         er = QHBoxLayout(); self.exp_choose = QPushButton('选择保存目录'); self.exp_choose.clicked.connect(self.choose_exp_folder)
         self.exp_start = QPushButton('开始实验'); self.exp_start.setObjectName('primary'); self.exp_start.clicked.connect(self.start_experiment)

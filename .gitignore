@@ -7,3 +7,6 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# New experiment recordings stay local; existing recordings are versioned.
+/data/experiments/

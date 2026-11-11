@@ -3,10 +3,10 @@ from pathlib import Path
 from unittest.mock import patch
 os.environ.setdefault('QT_QPA_PLATFORM','offscreen')
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from app import QApplication,Window
-from experiment import Experiment
-from protocol import Simulator
-from sensor import SensorPanel
+from xz_control.app import QApplication,Window
+from xz_control.experiment import Experiment
+from xz_control.protocol import Simulator
+from xz_control.sensor import SensorPanel
 
 class ExperimentTests(unittest.TestCase):
  @classmethod

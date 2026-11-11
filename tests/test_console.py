@@ -5,8 +5,8 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from protocol import Simulator, move_command, parse_status, motion_profile, profile_sample
-from app import QApplication, Window, Link, STYLE
+from xz_control.protocol import Simulator, move_command, parse_status, motion_profile, profile_sample
+from xz_control.app import QApplication, Window, Link, STYLE
 
 class ProtocolTests(unittest.TestCase):
     def test_acceleration_validation_and_profile(self):
@@ -80,7 +80,7 @@ class UITests(unittest.TestCase):
 
     def test_demo_never_opens_serial_and_buttons_follow_state(self):
         w=self.w
-        with patch('app.serial.Serial', side_effect=AssertionError('Must not open hardware')):
+        with patch('xz_control.app.serial.Serial', side_effect=AssertionError('Must not open hardware')):
             w.toggle_connection()
             self.assertFalse(w.arm.isEnabled()); self.assertFalse(w.execute.isEnabled())
             w.command('ZERO ALL'); self.assertTrue(w.arm.isEnabled())
@@ -182,7 +182,7 @@ class UITests(unittest.TestCase):
     def test_return_zero_beyond_old_distance_limit(self):
         w=self.w; w.toggle_connection(); w.command('ZERO ALL'); w.command('ARM')
         w.on_packet(dict(w.s, x=10001, tx=10001))
-        with patch('app.QMessageBox.warning') as warning, patch.object(w.link, 'send') as send:
+        with patch('xz_control.app.QMessageBox.warning') as warning, patch.object(w.link, 'send') as send:
             w.return_zero.click()
             warning.assert_not_called(); send.assert_called_once_with('MOVE ABS XZ 0 0 10 10 1000 1000')
 
