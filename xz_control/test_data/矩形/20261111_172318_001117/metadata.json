@@ -1,0 +1,58 @@
+{
+  "schema_version": 4,
+  "status": "complete",
+  "created_utc": "2026-11-11T09:23:18.001371+00:00",
+  "endpoint_pulses": {
+    "x": 25000,
+    "z": 1500
+  },
+  "speed_pps": {
+    "x": 1000,
+    "z": 1000
+  },
+  "acceleration_pps2": {
+    "x": 1000,
+    "z": 1000
+  },
+  "context": {
+    "motor_port": "/dev/cu.usbmodem101",
+    "sensor_port": "/dev/cu.usbmodem1101",
+    "sensor_baud": 115200,
+    "sensor_address": "0x0C (user supplied)",
+    "sensor_calibration": {
+      "id": 1,
+      "baseline_uT": [
+        941.9473880596996,
+        -55.01328358208952,
+        -1655.4382029850735
+      ],
+      "completed_utc": "2026-11-11T09:20:42.153829+00:00",
+      "samples": 670,
+      "duration_s": 2.004986708000004,
+      "source_kind": "B",
+      "method": "mean of unloaded input; corrected = input - baseline"
+    }
+  },
+  "timestamps": "host monotonic receive time; motor position is latest reported software pulse count",
+  "units": "uT per sensor firmware convention",
+  "samples": 8669,
+  "scan_complete": true,
+  "returned_to_zero": true,
+  "files": {
+    "samples": "magnetic_xyz.csv",
+    "controller": "controller.csv",
+    "events": "events.jsonl"
+  },
+  "motor_phase_codes": {
+    "0": "idle",
+    "1": "X first",
+    "2": "Z first",
+    "3": "final/simultaneous"
+  },
+  "motor_speed_meaning": "controller scheduled pulse rate, not measured motor speed",
+  "magnetic_columns": "magnetic_xyz = original serial values; corrected_magnetic_xyz = original minus baseline_xyz; calibration_id 0 means uncalibrated. signal_kind describes original input.",
+  "sensor_timing": "CSV first column preserved as device_time_us per t_us contract; confirm firmware units. Relative lag is excess over minimum observed host-device offset, NOT absolute latency; clock drift and buffering affect it. Labelled output has no device time.",
+  "controller_samples": 293,
+  "events": 16,
+  "record_start_utc": "2026-11-11T09:23:20.486105+00:00"
+}
